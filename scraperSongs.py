@@ -12,4 +12,4 @@ output_file = "dataset.csv"
 
 scraper = Scraper();
 scraper.execute_scraper();
-#scraper.data2csv(output_file);
+scraper.data2csv(output_file);

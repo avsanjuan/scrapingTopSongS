@@ -5,12 +5,12 @@ Editor de Spyder
 Este es un archivo temporal
 """
 
-import urllib3
+#import urllib3
 import requests
-import re
-import time
+#import re
+#import time
 from bs4 import BeautifulSoup
-from dateutil import parser
+#from dateutil import parser
 from requests.exceptions import HTTPError 
 
 #from reason_classifier import ReasonClassifier
@@ -19,6 +19,13 @@ class Scraper():
     def __init__(self):
         self.url ="https://www.elportaldemusica.es/lists/top-100-canciones/2020"
         self.subdomain = "/database.htm"
+        self.find_arg = [
+                        ['p','class','single-list-entry-rank-position'],
+                        ['div', 'class','name'],
+                        ['div', 'class','related'],
+                        ['div', 'class','list_week'],
+                        ['span', 'class','number'],
+                        ]
         self.data = []
         
     def requestPage(self):  
@@ -35,37 +42,36 @@ class Scraper():
             return None
 
     def __download_html(self, url):
-        #self.response = urllib3.request(url)
-        #html = self.response.read()
         html = self.requestPage()
-       # html = requestPage(url)
         return html
     
+    def extract_data(self, html, arg1, arg2, arg3):
+        result = html.find_all(arg1, {arg2: arg3})
+        return result
     
     def execute_scraper(self):
-        print(self.url)
-        print('paso 0')
         html = self.__download_html(self.url)
-        print('paso 1')
         if html is not None:
-            print('paso 2')
-        # Search wallpapers URL
-            ranking = html.find_all('p', {'class': 'single-list-entry-rank-position '})
-            print(ranking)
-            for rk in ranking:
-                i = rk.find('p')
-                print(i)
-                #img = wp.find('img')
-                #images.append(img.attrs['src'])
-    
-            # Search for next page URL
-            #try:
-            #    more_button = html.find('a', {'class':'more'})
-            #    next_page = more_button.attrs['href']
-            #except:
-            #    pass
-        #print('Hola mundo')
-        #print(html)
-        
-
-    #print('hola mundo')
+            j=0;
+            for fa in self.find_arg:
+                result = self.extract_data(html, fa[0], fa[1], fa[2])
+                i=0;
+                for rs in result:
+                    if j == 0:
+                        self.data.append(1)
+                        self.data[i]=rs.string.strip()
+                    else:
+                        self.data[i]=str(self.data[i]) + ';' + str(rs.string.strip())
+                    i=i+1
+                j=j+1
+           
+                
+    def data2csv(self, filename):
+        #file = open("../csv/" + filename, "w+")
+        file = open(filename, "w+")
+        for dt in self.data:
+                file.write(dt + "\n");
+		
+            
+     
+            
