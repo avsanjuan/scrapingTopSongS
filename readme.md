@@ -13,4 +13,5 @@ src/scraper.py: contiene la implementación de la clase Scraper cuyos métodos g
 
 ### Recursos ###
 1.- https://www.python.org/
+
 2.- Mitchel, R. (2018). Web Scraping with Python 2e: O’Reilly Media
