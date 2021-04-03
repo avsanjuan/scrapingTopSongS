@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Editor de Spyder
-
-Este es un archivo temporal
+Created on Wed Mar 24 19:49:24 2021
+@author: angel vicente sanjuan martin
+@class : Scraper
+Extract data from www.elportaldemusica.es 
+        top 100 songs from 2009 to 2020 
 """
 
 
@@ -16,7 +18,6 @@ class Scraper():
     def __init__(self):
         self.url ="https://www.elportaldemusica.es/lists/top-100-canciones/"
         self.suburl = "https://www.elportaldemusica.es"
-        #self.subdomain = "/database.htm"
         self.find_arg = [
                         ["p","class","single-list-entry-rank-position"],
                         ["div", "class","name"],
