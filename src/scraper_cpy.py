@@ -5,23 +5,26 @@ Editor de Spyder
 Este es un archivo temporal
 """
 
-
+#import urllib3
 import requests
-import re
+#import re
+#import time
 from bs4 import BeautifulSoup
+#from dateutil import parser
 from requests.exceptions import HTTPError 
 
+#from reason_classifier import ReasonClassifier
 class Scraper():
 
     def __init__(self):
         self.url ="https://www.elportaldemusica.es/lists/top-100-canciones/"
-        self.suburl = "https://www.elportaldemusica.es"
-        #self.subdomain = "/database.htm"
+        self.subdomain = "/database.htm"
         self.find_arg = [
                         ["p","class","single-list-entry-rank-position"],
                         ["div", "class","name"],
                         ["div", "class","related"],
-                        ["div", "class","list_week"]
+                        ["div", "class","list_week"],
+                        ["span", "class","number"],
                         ]
         self.data = []
         self.years = [2009 , 2010 , 2011 , 2012 , 2013 , 2014 , 2015 , 2016 , 2017 , 2018 , 2019 , 2020]
@@ -44,14 +47,18 @@ class Scraper():
         return html
     
     def extract_data(self, html, arg1, arg2, arg3):
+        #print(html)
         result = html.find_all(arg1, {arg2: arg3})
         return result
     
     def execute_scraper(self):
         url2 = self.url
-        i=j=k=0
+        i=0
+        j=0
+        k=0
         for ya in self.years:
             self.url = url2 + str(ya)
+            print(self.url)
             html = self.__download_html()
             if html is not None:
                 j=0;
@@ -61,19 +68,17 @@ class Scraper():
                     for rs in result:
                         if j == 0:
                             self.data.append(1)
-                            self.data[i]=str(ya) + ";" + str(rs.string.strip())
+                            self.data[i]=str(ya) + ';' + str(rs.string.strip())
+                            #self.data[i]=str(rs.string.strip())
                         else:
-                            self.data[i]=str(self.data[i]) + ";" + str(rs.string.strip())
+                            self.data[i]=str(self.data[i]) + ';' + str(rs.string.strip())
                         i=i+1
                     j=j+1
-                i=k
-                for link in html.findAll('a', attrs={'href': re.compile("/single/")}):
-                    self.data[i]=str(self.data[i]) + ";" + self.suburl + link.get('href')
-                    i=i+1
-                        
                 k=i
+               
                 
     def data2csv(self, filename):
+        #file = open("../csv/" + filename, "w+")
         file = open(filename, "w+")
         for dt in self.data:
                  file.write(str(dt) + "\n");
